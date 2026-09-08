@@ -5,13 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "vercel:dev": "vercel dev --listen 3001",
+    "vercel:dev:from-root": "vercel dev frontend --listen 3001",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
+    "dotenv": "^17.4.2",
     "firebase": "^12.18.0",
+    "firebase-admin": "^14.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3"
