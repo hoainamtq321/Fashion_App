@@ -1,0 +1,295 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #e8e0d7;
+  background: rgba(255, 253, 249, 0.96);
+  backdrop-filter: blur(14px);
+}
+
+.inner {
+  width: min(100%, 1180px);
+  min-height: 84px;
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 28px;
+  margin: 0 auto;
+  padding: 0 28px;
+  box-sizing: border-box;
+}
+
+.logo {
+  color: #26372f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 25px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 3vw, 42px);
+  min-width: 0;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 28px);
+}
+
+.navLink,
+.actionLink,
+.accountButton,
+.cartButton {
+  color: #4d5a52;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.navLink {
+  position: relative;
+  padding: 8px 0;
+}
+
+.navLink::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: #a66d4e;
+  content: '';
+  transform: scaleX(0);
+  transition: transform 180ms ease;
+}
+
+.navLink:hover::after {
+  transform: scaleX(1);
+}
+
+.search {
+  width: min(100%, 190px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #cfc5bb;
+}
+
+.searchIcon {
+  color: #a66d4e;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.searchInput {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #26372f;
+  font: inherit;
+  font-size: 13px;
+}
+
+.searchInput::placeholder {
+  color: #938980;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.accountMenu {
+  position: relative;
+}
+
+.accountButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.accountButton:hover {
+  color: #a66d4e;
+}
+
+.accountIcon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.chevron {
+  color: #a66d4e;
+  font-size: 16px;
+  line-height: 0.7;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 18px);
+  right: 0;
+  width: 210px;
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border: 1px solid #e8e0d7;
+  background: #fffdf9;
+  box-shadow: 0 14px 30px rgba(50, 40, 30, 0.12);
+}
+
+.menuLabel,
+.userEmail {
+  display: block;
+  padding: 4px 8px 10px;
+  overflow: hidden;
+  color: #938980;
+  font-size: 11px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuItem {
+  width: 100%;
+  display: block;
+  padding: 10px 8px;
+  border: 0;
+  box-sizing: border-box;
+  background: transparent;
+  color: #4d5a52;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.menuItem:hover {
+  background: #f5f1ec;
+  color: #a66d4e;
+}
+
+.actionLink:hover,
+.cartButton:hover {
+  color: #a66d4e;
+}
+
+.cartButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cartIcon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+@media (max-width: 920px) {
+  .inner {
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    padding: 0 20px;
+  }
+
+  .middle {
+    justify-content: flex-start;
+    gap: 18px;
+  }
+
+  .navigation {
+    gap: 14px;
+  }
+
+  .search {
+    width: 140px;
+  }
+}
+
+@media (max-width: 680px) {
+  .inner {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'logo actions'
+      'middle middle';
+    gap: 14px 16px;
+    padding: 16px 18px;
+  }
+
+  .logo {
+    grid-area: logo;
+    font-size: 22px;
+  }
+
+  .middle {
+    grid-area: middle;
+    justify-content: space-between;
+  }
+
+  .navigation {
+    gap: 12px;
+    overflow-x: auto;
+  }
+
+  .navLink {
+    font-size: 10px;
+  }
+
+  .search {
+    flex: 0 0 120px;
+    width: 120px;
+  }
+
+  .actions {
+    grid-area: actions;
+    gap: 14px;
+  }
+
+  .actionLink,
+  .accountButton,
+  .cartButton {
+    font-size: 0;
+  }
+
+  .accountButton {
+    gap: 0;
+  }
+
+  .accountIcon {
+    font-size: 21px;
+  }
+
+  .chevron {
+    display: none;
+  }
+
+  .cartIcon {
+    font-size: 20px;
+  }
+}

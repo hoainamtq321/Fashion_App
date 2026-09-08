@@ -1,0 +1,14 @@
+.vercel/
+
+# Local environment files and secrets
+.env*
+!.env.example
+
+# Dependencies and generated build output
+node_modules/
+dist/
+dist-ssr/
+
+# Logs and local tooling files
+*.log
+.DS_Store

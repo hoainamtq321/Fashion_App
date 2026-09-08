@@ -10,7 +10,7 @@ import { ProtectedRoute, PublicOnlyRoute } from "./ProtectedRoute";
 const AppRoutes = ({ user }) => {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<MainLayout user={user} />}>
         {/* Trang chủ */}
         <Route index element={<Home />} />
 

@@ -2,11 +2,11 @@ import Header from "../components/Layouts/Header/Header";
 import Footer from "../components/Layouts/Footer/Footer";
 import { Outlet } from "react-router-dom";
 
-const MainLayout = () => {
+const MainLayout = ({ user }) => {
 
   return (
     <>
-      <Header />
+      <Header user={user} />
       <main>
         <Outlet />
       </main>
