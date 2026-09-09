@@ -1,0 +1,255 @@
+.page {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 34px 28px 120px;
+  box-sizing: border-box;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 30px;
+  color: #6e513d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.productLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(340px, 0.88fr);
+  gap: clamp(44px, 8vw, 110px);
+  align-items: start;
+}
+
+.mainImageWrap {
+  aspect-ratio: 0.82;
+  overflow: hidden;
+  background: #eee9e1;
+}
+
+.mainImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.thumbnail {
+  width: 72px;
+  height: 86px;
+  padding: 0;
+  border: 1px solid transparent;
+  overflow: hidden;
+  background: #eee9e1;
+  cursor: pointer;
+}
+
+.selectedThumbnail {
+  border-color: #a66d4e;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.details {
+  padding-top: 18px;
+}
+
+.category,
+.eyebrow {
+  margin-bottom: 13px;
+  color: #a66d4e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: #26372f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(40px, 5vw, 66px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.price {
+  color: #26372f;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.comparePrice {
+  color: #a3978d;
+  font-size: 14px;
+  text-decoration: line-through;
+}
+
+.description {
+  max-width: 440px;
+  margin: 28px 0 38px;
+  color: #6e716b;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.optionGroup {
+  padding: 18px 0;
+  border-top: 1px solid #ded4ca;
+}
+
+.optionHeading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  color: #26372f;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.optionHeading strong {
+  font-weight: 400;
+  text-transform: none;
+}
+
+.optionHeading a {
+  color: #6e513d;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.colorSwatch {
+  width: 25px;
+  height: 25px;
+  display: block;
+  border: 2px solid #fff;
+  outline: 1px solid #b9aa9a;
+  border-radius: 50%;
+  background: #c7b195;
+}
+
+.sizeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sizeButton,
+.quantity {
+  min-width: 52px;
+  height: 44px;
+  border: 1px solid #d4c9be;
+  background: transparent;
+  color: #4d5a52;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.selectedSize {
+  border-color: #26372f;
+  background: #26372f;
+  color: #fffdf9;
+}
+
+.purchaseRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 118px;
+}
+
+.quantity button {
+  border: 0;
+  background: transparent;
+  color: #26372f;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.addButton {
+  flex: 1;
+  border: 1px solid #26372f;
+  background: #26372f;
+  color: #fffdf9;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.addButton:hover {
+  background: #a66d4e;
+  border-color: #a66d4e;
+}
+
+.detailsNote {
+  margin-top: 22px;
+  color: #8c8178;
+  font-size: 12px;
+}
+
+.detailsNote span {
+  margin-right: 7px;
+  color: #a66d4e;
+}
+
+.notFound {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 120px 28px;
+  box-sizing: border-box;
+}
+
+.notFound h1 {
+  margin: 0 0 24px;
+  color: #26372f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 400;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 26px 18px 80px;
+  }
+
+  .productLayout {
+    display: block;
+  }
+
+  .details {
+    padding-top: 42px;
+  }
+}

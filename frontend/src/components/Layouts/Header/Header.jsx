@@ -3,9 +3,11 @@ import { useState } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../services/firebase";
 import styles from "./Header.module.css";
+import { useCart } from "../../../context/useCart";
 
 const Header = ({ user }) => {
     const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+    const { cartCount } = useCart();
 
     const handleLogout = async () => {
         await signOut(auth);
@@ -71,10 +73,10 @@ const Header = ({ user }) => {
                             </div>
                         )}
                     </div>
-                    <button className={styles.cartButton} type="button" aria-label="Open shopping bag">
+                    <Link className={styles.cartButton} to="/cart" aria-label="Open shopping bag">
                         <span className={styles.cartIcon} aria-hidden="true">♧</span>
-                        <span>Bag (0)</span>
-                    </button>
+                        <span>Bag ({cartCount})</span>
+                    </Link>
                 </div>
             </div>
         </header>

@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './services/firebase';
 import AppRoutes from './routes/AppRoutes';
+import { CartProvider } from './context/CartContext.jsx';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -23,10 +24,11 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-    {/* Truyền user xuống AppRoutes */}
-      <AppRoutes user={user} />
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <AppRoutes user={user} />
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 

@@ -4,6 +4,9 @@ import Home from "../pages/home/HomePage";
 import Login from "../pages/auth/LoginPage";
 import Register from "../pages/auth/RegisterPage";
 import NotFound from "../pages/NotFound/NotFoundPage";
+import ProductDetailPage from "../pages/products/ProductDetailPage";
+import CartPage from "../pages/cart/CartPage";
+import AdminPage from "../pages/admin/AdminPage";
 
 import { ProtectedRoute, PublicOnlyRoute } from "./ProtectedRoute";
 
@@ -13,6 +16,9 @@ const AppRoutes = ({ user }) => {
       <Route path="/" element={<MainLayout user={user} />}>
         {/* Trang chủ */}
         <Route index element={<Home />} />
+        <Route path="products/:productId" element={<ProductDetailPage />} />
+        <Route path="cart" element={<CartPage />} />
+        <Route path="admin" element={<AdminPage />} />
 
 
         {/* Các trang chỉ cho khách CHƯA ĐĂNG NHẬP vào (Login, Register) */}
