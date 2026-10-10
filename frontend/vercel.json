@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!@vite/|@react-refresh|src/|.*\\..*).*)",
+      "source": "/((?!@vite/|@react-refresh|api/|src/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
