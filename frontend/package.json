@@ -16,7 +16,7 @@
     "dotenv": "^17.4.2",
     "firebase": "^12.18.0",
     "firebase-admin": "^14.3.0",
-    "jose": "^6.2.12",
+    "jose": "^5.10.0",
     "jwks-rsa": "^4.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
