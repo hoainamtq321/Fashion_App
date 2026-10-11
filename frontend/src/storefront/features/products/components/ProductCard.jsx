@@ -4,7 +4,8 @@ import { useCart } from "../../cart/hooks/useCart";
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
-
+// 🔍 Xem giá trị thực tế của từng product truyền vào thẻ Card
+    console.log("📦 Dữ liệu nhận trong ProductCard:", product);
     return (
         <article className={styles.card}>
             <Link className={styles.imageLink} to={`/products/${product.id}`}>

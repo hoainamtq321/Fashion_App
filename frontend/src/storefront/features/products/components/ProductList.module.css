@@ -47,6 +47,81 @@
   gap: 28px 18px;
 }
 
+.skeletonCard {
+  min-width: 0;
+}
+
+.skeletonImage,
+.skeletonText,
+.skeletonTextShort,
+.skeletonTextPrice,
+.skeletonButton {
+  background: linear-gradient(100deg, #eee9e4 30%, #f8f5f2 50%, #eee9e4 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeletonImage {
+  aspect-ratio: 3 / 4;
+  margin-bottom: 16px;
+}
+
+.skeletonText,
+.skeletonTextShort,
+.skeletonTextPrice {
+  height: 12px;
+  margin-bottom: 10px;
+}
+
+.skeletonText {
+  width: 72%;
+}
+
+.skeletonTextShort {
+  width: 48%;
+}
+
+.skeletonTextPrice {
+  width: 30%;
+  margin-top: 18px;
+}
+
+.skeletonButton {
+  height: 38px;
+  margin-top: 18px;
+}
+
+.stateMessage {
+  margin: 0;
+  color: #746a62;
+  text-align: center;
+}
+
+.retryButton {
+  margin-top: 8px;
+  border: 0;
+  padding: 8px 12px;
+  background: #26372f;
+  color: #fff;
+  cursor: pointer;
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonImage,
+  .skeletonText,
+  .skeletonTextShort,
+  .skeletonTextPrice,
+  .skeletonButton {
+    animation: none;
+  }
+}
+
 @media (max-width: 900px) {
   .section {
     padding-top: 62px;

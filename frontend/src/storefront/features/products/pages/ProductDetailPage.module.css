@@ -140,14 +140,26 @@
   text-underline-offset: 3px;
 }
 
-.colorSwatch {
-  width: 25px;
-  height: 25px;
-  display: block;
-  border: 2px solid #fff;
-  outline: 1px solid #b9aa9a;
-  border-radius: 50%;
-  background: #c7b195;
+.colorChoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.colorChoice {
+  border: 1px solid #d4c9be;
+  padding: 9px 12px;
+  background: transparent;
+  color: #4d5a52;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+
+.selectedColorChoice {
+  border-color: #26372f;
+  background: #26372f;
+  color: #fffdf9;
 }
 
 .sizeGrid {
@@ -238,6 +250,17 @@
   font-family: Georgia, 'Times New Roman', serif;
   font-size: clamp(40px, 6vw, 72px);
   font-weight: 400;
+}
+
+.retryButton {
+  display: block;
+  margin: 0 0 16px;
+  border: 1px solid #26372f;
+  padding: 12px 16px;
+  background: #26372f;
+  color: #fffdf9;
+  cursor: pointer;
+  font: inherit;
 }
 
 @media (max-width: 760px) {

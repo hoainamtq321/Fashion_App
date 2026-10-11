@@ -168,9 +168,22 @@ export default async function handler(req, res) {
 
     if (req.method === "GET") {
       const includeAll = req.query?.all === "true";
+      const productId = getProductId(req);
 
       if (includeAll && !(await requireAdmin(req, res))) {
         return;
+      }
+
+      if (productId) {
+        const productDoc = await productsRef.doc(productId).get();
+        if (!productDoc.exists || (!includeAll && productDoc.data().status !== "active")) {
+          return sendError(res, 404, "Không tìm thấy sản phẩm.");
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: serializeProduct(productDoc),
+        });
       }
 
       const snapshot = includeAll

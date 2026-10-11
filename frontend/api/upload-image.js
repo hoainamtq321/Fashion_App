@@ -1,7 +1,15 @@
+import { randomUUID } from "node:crypto";
 import { getAdminAuth } from "../lib/firebaseAdmin.js";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 const IMAGE_DATA_URL_PATTERN = /^data:(image\/(?:jpeg|png|webp|gif|avif));base64,([A-Za-z0-9+/]+={0,2})$/;
+const IMAGE_EXTENSIONS = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "image/avif": "avif",
+};
 
 const sendError = (res, status, message) =>
   res.status(status).json({ success: false, message });
@@ -70,11 +78,19 @@ export default async function handler(req, res) {
   const uploadUrl = new URL("https://api.imgbb.com/1/upload");
   uploadUrl.searchParams.set("key", apiKey);
 
+  const originalName = typeof req.body.name === "string"
+    ? req.body.name.split(/[\\/]/).pop()
+    : "";
+  const nameWithoutExtension = originalName.replace(/\.[^.]*$/, "");
+  const safeName = nameWithoutExtension
+    .replace(/[^\p{L}\p{N}_-]+/gu, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 100) || "image";
+  const uniqueName = `${safeName}-${randomUUID()}.${IMAGE_EXTENSIONS[mimeType]}`;
+
   const formData = new FormData();
   formData.set("image", base64Image);
-  if (typeof req.body.name === "string") {
-    formData.set("name", req.body.name.slice(0, 180));
-  }
+  formData.set("name", uniqueName);
 
   let response;
   try {

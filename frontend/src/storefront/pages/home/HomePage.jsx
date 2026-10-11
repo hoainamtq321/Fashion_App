@@ -3,13 +3,13 @@ import ProductList from "../../features/products/components/ProductList";
 import { useProducts } from "../../features/products/hooks/useProducts";
 
 const Home = () => {
-    const products = useProducts();
+    const productState = useProducts();
 
     return (
         <>
             <HomeBanner />
             <div id="the-edit">
-                <ProductList products={products} />
+                <ProductList {...productState} />
             </div>
         </>
     );
