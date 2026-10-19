@@ -1,14 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AdminDataContext } from "./AdminDataContext";
 import { deleteAdminProduct, getAdminProducts, updateAdminProductStatus } from "../services/adminProductsApi";
-
-const initialOrders = [
-    { id: "#MSN-1048", customer: "Olivia Martin", date: "Sep 09, 2026", total: 334, items: 2, status: "Processing" },
-    { id: "#MSN-1047", customer: "Amelia Stone", date: "Sep 08, 2026", total: 189, items: 1, status: "Shipped" },
-    { id: "#MSN-1046", customer: "Nora Williams", date: "Sep 08, 2026", total: 263, items: 2, status: "Delivered" },
-    { id: "#MSN-1045", customer: "Mia Anderson", date: "Sep 07, 2026", total: 145, items: 1, status: "Pending" },
-    { id: "#MSN-1044", customer: "Ella Thompson", date: "Sep 06, 2026", total: 118, items: 1, status: "Delivered" },
-];
+import { getAdminOrders, updateAdminOrder, updateAdminOrderPaymentStatus, updateAdminOrderStatus } from "../services/adminOrdersApi";
 
 const initialCategories = [
     { id: "cat_ao", label: "Áo" },
@@ -28,10 +21,12 @@ const toCategorySlug = (label) => label
 
 export const AdminDataProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
-    const [orders, setOrders] = useState(initialOrders);
+    const [orders, setOrders] = useState([]);
     const [categories, setCategories] = useState(initialCategories);
     const [isLoadingProducts, setIsLoadingProducts] = useState(true);
     const [productsError, setProductsError] = useState("");
+    const [isLoadingOrders, setIsLoadingOrders] = useState(true);
+    const [ordersError, setOrdersError] = useState("");
 
     useEffect(() => {
         let isCurrent = true;
@@ -69,12 +64,49 @@ export const AdminDataProvider = ({ children }) => {
         };
     }, []);
 
+    useEffect(() => {
+        let isCurrent = true;
+        const loadOrders = async () => {
+            try {
+                const savedOrders = await getAdminOrders();
+                if (!isCurrent) return;
+                setOrders(savedOrders);
+                setOrdersError("");
+            } catch (error) {
+                if (isCurrent) {
+                    setOrdersError(error instanceof Error ? error.message : "Could not load orders.");
+                }
+            } finally {
+                if (isCurrent) setIsLoadingOrders(false);
+            }
+        };
+
+        loadOrders();
+        return () => {
+            isCurrent = false;
+        };
+    }, []);
+
     const value = useMemo(() => ({
         products,
         orders,
         categories,
         isLoadingProducts,
         productsError,
+        isLoadingOrders,
+        ordersError,
+        async retryOrders() {
+            setIsLoadingOrders(true);
+            setOrdersError("");
+            try {
+                const savedOrders = await getAdminOrders();
+                setOrders(savedOrders);
+            } catch (error) {
+                setOrdersError(error instanceof Error ? error.message : "Could not load orders.");
+            } finally {
+                setIsLoadingOrders(false);
+            }
+        },
         setProducts,
         clearProductsError() {
             setProductsError("");
@@ -117,10 +149,41 @@ export const AdminDataProvider = ({ children }) => {
                 setProductsError(error instanceof Error ? error.message : "Could not update product status.");
             }
         },
-        updateOrderStatus(orderId, status) {
-            setOrders((currentOrders) => currentOrders.map((order) => order.id === orderId ? { ...order, status } : order));
+        async updateOrderStatus(orderId, status) {
+            const updatedOrder = await updateAdminOrderStatus(orderId, status);
+            setOrders((currentOrders) => currentOrders.map((order) => order.id === orderId ? updatedOrder : order));
+            setOrdersError("");
+            if (status === "Cancelled") {
+                try {
+                    const currentProducts = await getAdminProducts();
+                    setProducts(currentProducts);
+                    setProductsError("");
+                } catch (error) {
+                    setProductsError(error instanceof Error ? error.message : "The order was cancelled, but inventory could not be refreshed.");
+                }
+            }
+            return updatedOrder;
         },
-    }), [products, orders, categories, isLoadingProducts, productsError]);
+        async updateOrder(orderId, orderData) {
+            const updatedOrder = await updateAdminOrder(orderId, orderData);
+            setOrders((currentOrders) => currentOrders.map((order) => order.id === orderId ? updatedOrder : order));
+            setOrdersError("");
+            try {
+                const currentProducts = await getAdminProducts();
+                setProducts(currentProducts);
+                setProductsError("");
+            } catch (error) {
+                setProductsError(error instanceof Error ? error.message : "The order was updated, but inventory could not be refreshed.");
+            }
+            return updatedOrder;
+        },
+        async updateOrderPaymentStatus(orderId, paymentStatus) {
+            const updatedOrder = await updateAdminOrderPaymentStatus(orderId, paymentStatus);
+            setOrders((currentOrders) => currentOrders.map((order) => order.id === orderId ? updatedOrder : order));
+            setOrdersError("");
+            return updatedOrder;
+        },
+    }), [products, orders, categories, isLoadingProducts, productsError, isLoadingOrders, ordersError]);
 
     return <AdminDataContext.Provider value={value}>{children}</AdminDataContext.Provider>;
 };

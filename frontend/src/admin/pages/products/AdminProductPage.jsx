@@ -1,69 +1,20 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { fakeProducts } from "../../../shared/data/mockProducts";
 import { useAdminData } from "../../context/AdminDataContext";
 import { ProductTable } from "../../components/AdminTables";
 import PanelHeading from "../../components/PanelHeading";
 import ProductFormModal from "./ProductFormModal";
+import { createColorGroup, createEmptyProductForm, getColorGroups } from "./productFormUtils";
 import styles from "../../components/AdminShared.module.css";
 import { createAdminProduct, updateAdminProduct, uploadProductImage } from "../../services/adminProductsApi";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 const acceptedImageTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"]);
 
-const createColorGroup = (color = "", image = "", sizes = [{ size: "", stock: "" }]) => ({
-    id: `color-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-    color,
-    image,
-    sizes,
-});
-
-const createEmptyProductForm = () => ({
-    name: "",
-    categoryId: "cat_ao",
-    description: "",
-    price: "",
-    status: "active",
-    images: [""],
-    colors: [createColorGroup()],
-});
-
-const getColorGroups = (product) => {
-    if (Array.isArray(product.colors) && product.colors.length) {
-        return product.colors.map(({ color, name, image, sizes }) => createColorGroup(
-            color || name || "",
-            image || "",
-            Array.isArray(sizes) && sizes.length
-                ? sizes.map(({ size, stock }) => ({ size: size || "", stock: stock ?? "" }))
-                : [{ size: "", stock: "" }],
-        ));
-    }
-
-    const groupsByColor = new Map();
-    (product.variants || []).forEach(({ color, size, stock, image }) => {
-        const groupName = color || "";
-        if (!groupsByColor.has(groupName)) {
-            groupsByColor.set(groupName, { image: image || "", sizes: [] });
-        }
-        groupsByColor.get(groupName).sizes.push({ size: size || "", stock: stock ?? "" });
-    });
-
-    if (!groupsByColor.size) {
-        const sizes = Array.isArray(product.sizes) && product.sizes.length ? product.sizes : ["One size"];
-        return [createColorGroup(
-            product.color || "",
-            product.image || "",
-            sizes.map((size, index) => ({ size, stock: index === 0 ? product.stock ?? 0 : 0 })),
-        )];
-    }
-
-    return [...groupsByColor.entries()].map(([color, group]) => createColorGroup(
-        color,
-        group.image,
-        group.sizes.length ? group.sizes : [{ size: "", stock: "" }],
-    ));
-};
-
 const ProductsPage = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const {
         products,
         categories,
@@ -103,7 +54,7 @@ const ProductsPage = () => {
         setModalOpen(true);
     };
 
-    const openEditProduct = (product) => {
+    const openEditProduct = useCallback((product) => {
         setEditingProductId(product.id);
         setProductForm({
             name: product.name,
@@ -120,7 +71,18 @@ const ProductsPage = () => {
         setCategoryError("");
         setFormError("");
         setModalOpen(true);
-    };
+    }, []);
+
+    // Reconcile the detail page's edit request with the product form after navigation.
+    useEffect(() => {
+        const { editProductId } = location.state || {};
+        if (!editProductId || isLoadingProducts) return;
+
+        const productToEdit = products.find(({ id }) => id === editProductId);
+        // oxlint-disable-next-line react/set-state-in-effect
+        if (productToEdit) openEditProduct(productToEdit);
+        navigate(location.pathname, { replace: true, state: null });
+    }, [isLoadingProducts, location.pathname, location.state, navigate, openEditProduct, products]);
 
     const closeProductModal = () => {
         if (isUploadingImages) return;

@@ -1,16 +1,19 @@
-# React + Vite
+# Maison fashion store
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React storefront and admin workspace for a fashion shop. Customers can browse published products, sign in, manage an account-specific shopping bag, place cash-on-delivery orders, and review their own order history. Administrators manage products, inventory, and order fulfillment.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Install dependencies with `npm install` from this directory.
+2. Copy `.env.example` to `.env.local` and provide the Firebase web app configuration.
+3. Configure the server-only Firebase Admin credentials and ImgBB key in the local environment when using admin product/image APIs.
+4. Enable Email/Password sign-in in Firebase Authentication and create a Firestore database. Deploy the root `firestore.rules`.
+5. Grant administrator accounts the Firebase custom claim `admin: true` using a trusted server-side process.
+6. Start the Vite development server with `npm run dev`; use `npm run vercel:dev` to run the API functions locally through Vercel.
 
-## React Compiler
+For production, configure the same variables in the hosting provider. Never expose Firebase Admin credentials or the ImgBB API key through `VITE_` variables. The API verifies Firebase ID tokens, derives the customer account from the verified identity, and calculates order prices and stock changes on the server.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Checks
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- `npm run lint`
+- `npm run build`

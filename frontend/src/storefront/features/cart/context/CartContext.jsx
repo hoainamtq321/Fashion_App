@@ -1,30 +1,34 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CartContext } from "./cartContext";
-const storageKey = "maison-cart";
+const getStorageKey = (userId) => `maison-cart:${userId}`;
 
-const readStoredCart = () => {
+const readStoredCart = (userId) => {
+    if (!userId) return [];
     try {
-        const storedCart = window.localStorage.getItem(storageKey);
-        return storedCart ? JSON.parse(storedCart) : [];
+        const storedCart = window.localStorage.getItem(getStorageKey(userId));
+        const parsedCart = storedCart ? JSON.parse(storedCart) : [];
+        return Array.isArray(parsedCart) ? parsedCart : [];
     } catch {
         return [];
     }
 };
 
-export const CartProvider = ({ children }) => {
-    const [items, setItems] = useState(readStoredCart);
-
+const CartSession = ({ children, userId }) => {
+    const [items, setItems] = useState(() => readStoredCart(userId));
     useEffect(() => {
-        window.localStorage.setItem(storageKey, JSON.stringify(items));
-    }, [items]);
+        if (userId) window.localStorage.setItem(getStorageKey(userId), JSON.stringify(items));
+    }, [items, userId]);
 
-    const addToCart = (product, size, quantity = 1) => {
+    const addToCart = useCallback((product, size, quantity = 1) => {
+        if (!userId) throw new Error("Please sign in before adding items to your bag.");
         setItems((currentItems) => {
-            const existingItem = currentItems.find((item) => item.id === product.id && item.size === size);
+            const existingItem = currentItems.find((item) => (
+                item.id === product.id && item.color === product.color && item.size === size
+            ));
 
             if (existingItem) {
                 return currentItems.map((item) => (
-                    item.id === product.id && item.size === size
+                    item.id === product.id && item.color === product.color && item.size === size
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 ));
@@ -41,26 +45,46 @@ export const CartProvider = ({ children }) => {
                 quantity,
             }];
         });
-    };
+    }, [userId]);
 
-    const updateQuantity = (itemId, size, quantity) => {
+    const updateQuantity = useCallback((itemId, size, color, quantity) => {
         if (quantity < 1) {
-            setItems((currentItems) => currentItems.filter((item) => !(item.id === itemId && item.size === size)));
+            setItems((currentItems) => currentItems.filter((item) => !(
+                item.id === itemId && item.size === size && item.color === color
+            )));
             return;
         }
 
         setItems((currentItems) => currentItems.map((item) => (
-            item.id === itemId && item.size === size ? { ...item, quantity } : item
+            item.id === itemId && item.size === size && item.color === color ? { ...item, quantity } : item
         )));
-    };
+    }, []);
 
-    const removeFromCart = (itemId, size) => {
-        setItems((currentItems) => currentItems.filter((item) => !(item.id === itemId && item.size === size)));
-    };
+    const removeFromCart = useCallback((itemId, size, color) => {
+        setItems((currentItems) => currentItems.filter((item) => !(
+            item.id === itemId && item.size === size && item.color === color
+        )));
+    }, []);
 
+    const clearCart = useCallback(() => setItems([]), []);
     const cartCount = items.reduce((total, item) => total + item.quantity, 0);
     const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
-    const value = useMemo(() => ({ items, addToCart, updateQuantity, removeFromCart, cartCount, subtotal }), [items, cartCount, subtotal]);
+    const value = useMemo(() => ({
+        items,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+        cartCount,
+        subtotal,
+        isAuthenticated: Boolean(userId),
+    }), [items, addToCart, updateQuantity, removeFromCart, clearCart, cartCount, subtotal, userId]);
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
+
+export const CartProvider = ({ children, user }) => (
+    <CartSession key={user?.uid || "signed-out"} userId={user?.uid || null}>
+        {children}
+    </CartSession>
+);

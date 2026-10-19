@@ -1,17 +1,28 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../../services/firebase";
 import styles from "./Header.module.css";
 import { useCart } from "../../../features/cart/hooks/useCart";
 
-const Header = ({ user }) => {
+const Header = ({ user, isAdmin }) => {
     const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+    const [redirectAfterLogout, setRedirectAfterLogout] = useState(false);
+    const navigate = useNavigate();
     const { cartCount } = useCart();
 
+    const closeAccountMenu = () => setAccountMenuOpen(false);
+
+    useEffect(() => {
+        if (redirectAfterLogout && !user) {
+            navigate("/login", { replace: true });
+        }
+    }, [navigate, redirectAfterLogout, user]);
+
     const handleLogout = async () => {
+        closeAccountMenu();
         await signOut(auth);
-        setAccountMenuOpen(false);
+        setRedirectAfterLogout(true);
     };
 
     return (
@@ -34,7 +45,7 @@ const Header = ({ user }) => {
                 </div>
 
                 <div className={styles.actions}>
-                    <div className={styles.accountMenu}>
+                    <div className={styles.accountMenu} onMouseLeave={closeAccountMenu}>
                         <button
                             className={styles.accountButton}
                             type="button"
@@ -52,8 +63,16 @@ const Header = ({ user }) => {
                                 {user ? (
                                     <>
                                         <span className={styles.userEmail}>{user.email}</span>
-                                        <Link className={styles.menuItem} to="/profile" role="menuitem" onClick={() => setAccountMenuOpen(false)}>
+                                        {isAdmin && (
+                                            <Link className={styles.menuItem} to="/admin" role="menuitem" onClick={closeAccountMenu}>
+                                                Admin dashboard
+                                            </Link>
+                                        )}
+                                        <Link className={styles.menuItem} to="/profile" role="menuitem" onClick={closeAccountMenu}>
                                             Profile
+                                        </Link>
+                                        <Link className={styles.menuItem} to="/orders" role="menuitem" onClick={closeAccountMenu}>
+                                            My orders
                                         </Link>
                                         <button className={styles.menuItem} type="button" role="menuitem" onClick={handleLogout}>
                                             Log out
@@ -62,10 +81,10 @@ const Header = ({ user }) => {
                                 ) : (
                                     <>
                                         <span className={styles.menuLabel}>You are not signed in</span>
-                                        <Link className={styles.menuItem} to="/login" role="menuitem" onClick={() => setAccountMenuOpen(false)}>
+                                        <Link className={styles.menuItem} to="/login" role="menuitem" onClick={closeAccountMenu}>
                                             Sign in
                                         </Link>
-                                        <Link className={styles.menuItem} to="/register" role="menuitem" onClick={() => setAccountMenuOpen(false)}>
+                                        <Link className={styles.menuItem} to="/register" role="menuitem" onClick={closeAccountMenu}>
                                             Create account
                                         </Link>
                                     </>

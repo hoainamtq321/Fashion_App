@@ -183,6 +183,57 @@
   font-size: 15px;
 }
 
+.checkoutForm {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0 20px;
+  padding-top: 18px;
+  border-top: 1px solid #ded4ca;
+}
+
+.checkoutForm h3 {
+  margin: 0;
+  color: #26372f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.checkoutForm label {
+  display: grid;
+  gap: 6px;
+  color: #6e716b;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.checkoutForm input,
+.checkoutForm textarea {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ded4ca;
+  background: #fffdf9;
+  color: #26372f;
+  font: inherit;
+  font-size: 12px;
+  text-transform: none;
+}
+
+.checkoutForm input { height: 40px; }
+.checkoutForm textarea { resize: vertical; }
+.checkoutNote { color: #746a62; font-size: 12px; line-height: 1.5; }
+.quoteItems { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.quoteItems li, .quoteTotal { display: flex; justify-content: space-between; gap: 12px; color: #746a62; font-size: 11px; }
+.quoteItems li span { min-width: 0; }
+.quoteItems li strong, .quoteTotal strong { color: #26372f; white-space: nowrap; }
+.quoteTotal { padding-top: 11px; border-top: 1px solid #ded4ca; font-weight: 700; }
+.checkoutError { color: #a45543; font-size: 12px; line-height: 1.5; }
+.secondaryCheckoutButton { padding: 9px; border: 1px solid #ded4ca; background: transparent; color: #6e513d; cursor: pointer; font: inherit; font-size: 11px; }
+.secondaryCheckoutButton:disabled { cursor: wait; opacity: .6; }
+
 .checkoutButton {
   width: 100%;
   height: 48px;
@@ -197,6 +248,8 @@
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
+
+.checkoutButton:disabled { cursor: wait; opacity: .65; }
 
 .checkoutButton:hover {
   background: #a66d4e;

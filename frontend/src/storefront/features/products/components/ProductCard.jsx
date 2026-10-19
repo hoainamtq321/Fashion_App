@@ -1,11 +1,8 @@
 import { Link } from "react-router-dom";
 import styles from "./ProductCard.module.css";
-import { useCart } from "../../cart/hooks/useCart";
 
 const ProductCard = ({ product }) => {
-    const { addToCart } = useCart();
-// 🔍 Xem giá trị thực tế của từng product truyền vào thẻ Card
-    console.log("📦 Dữ liệu nhận trong ProductCard:", product);
+    const formatPrice = (price) => `${Number(price || 0).toLocaleString("vi-VN")} ₫`;
     return (
         <article className={styles.card}>
             <Link className={styles.imageLink} to={`/products/${product.id}`}>
@@ -20,12 +17,11 @@ const ProductCard = ({ product }) => {
                     <h3 className={styles.name}>{product.name}</h3>
                 </div>
                 <div className={styles.priceGroup}>
-                    <span className={styles.price}>${product.price}</span>
-                    {product.compareAtPrice && <span className={styles.comparePrice}>${product.compareAtPrice}</span>}
+                    <span className={styles.price}>{formatPrice(product.price)}</span>
+                    {product.compareAtPrice && <span className={styles.comparePrice}>{formatPrice(product.compareAtPrice)}</span>}
                 </div>
             </div>
-            <Link className={styles.viewLink} to={`/products/${product.id}`}>View product <span aria-hidden="true">↗</span></Link>
-            <button className={styles.addButton} type="button" onClick={() => addToCart(product, product.sizes[0])}>Add to bag</button>
+            <Link className={styles.addButton} to={`/products/${product.id}`}>Choose options</Link>
         </article>
     );
 };

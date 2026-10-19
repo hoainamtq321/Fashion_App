@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchProductById } from "../services/productsApi";
 import { toCatalogProduct } from "../utils/toCatalogProduct";
@@ -7,6 +7,7 @@ import { useCart } from "../../cart/hooks/useCart";
 
 const ProductDetailPage = () => {
     const { productId } = useParams();
+    const location = useLocation();
     const [product, setProduct] = useState(null);
     const [loadedProductId, setLoadedProductId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +17,7 @@ const ProductDetailPage = () => {
     const [selectedColor, setSelectedColor] = useState("");
     const [selectedSize, setSelectedSize] = useState("");
     const [quantity, setQuantity] = useState(1);
-    const { addToCart } = useCart();
+    const { addToCart, isAuthenticated } = useCart();
 
     useEffect(() => {
         let isCurrent = true;
@@ -145,8 +146,8 @@ const ProductDetailPage = () => {
                     <p className={styles.category}>{product.category}</p>
                     <h1 className={styles.title}>{product.name}</h1>
                     <div className={styles.priceRow}>
-                        <span className={styles.price}>${product.price}</span>
-                        {product.compareAtPrice && <span className={styles.comparePrice}>${product.compareAtPrice}</span>}
+                        <span className={styles.price}>{Number(product.price || 0).toLocaleString("vi-VN")} ₫</span>
+                        {product.compareAtPrice && <span className={styles.comparePrice}>{Number(product.compareAtPrice).toLocaleString("vi-VN")} ₫</span>}
                     </div>
                     <p className={styles.description}>{product.description}</p>
 
@@ -180,9 +181,20 @@ const ProductDetailPage = () => {
                             <span>{quantity}</span>
                             <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Increase quantity">+</button>
                         </div>
-                        <button className={styles.addButton} type="button" onClick={() => addToCart({ ...product, color: selectedColor || product.color }, selectedSize, quantity)}>Add to bag</button>
+                        {isAuthenticated ? (
+                            <button
+                                className={styles.addButton}
+                                type="button"
+                                disabled={!selectedColor || !selectedSize}
+                                onClick={() => addToCart({ ...product, color: selectedColor }, selectedSize, quantity)}
+                            >Add to bag</button>
+                        ) : (
+                            <Link className={styles.addButton} to="/login" state={{ from: location }}>
+                                Sign in to add to bag
+                            </Link>
+                        )}
                     </div>
-                    <div className={styles.detailsNote}><span>✓</span> Complimentary shipping on orders over $150</div>
+                    <div className={styles.detailsNote}><span>✓</span> Complimentary delivery on every order</div>
                 </div>
             </div>
         </section>

@@ -22,12 +22,16 @@ const ProductFormModal = ({
     createCategory,
     categoryError,
     formError,
+    inline = false,
 }) => (
-    <div className={styles.modalBackdrop} onMouseDown={(event) => event.target === event.currentTarget && closeProductModal()}>
-        <form className={styles.modal} onSubmit={saveProduct}>
+    <div
+        className={inline ? styles.inlineFormWrap : styles.modalBackdrop}
+        onMouseDown={(event) => !inline && event.target === event.currentTarget && closeProductModal()}
+    >
+        <form className={inline ? styles.inlineForm : styles.modal} onSubmit={saveProduct}>
             <div className={styles.modalHeading}>
-                <div><p className={styles.panelEyebrow}>Catalog</p><h2>{editingProductId ? "Edit product" : "Add product"}</h2></div>
-                <button type="button" className={styles.closeButton} onClick={closeProductModal} disabled={isUploadingImages} aria-label="Close">×</button>
+                <div><p className={styles.panelEyebrow}>Catalog</p><h2>{inline ? "Edit product" : editingProductId ? "Edit product" : "Add product"}</h2></div>
+                {!inline && <button type="button" className={styles.closeButton} onClick={closeProductModal} disabled={isUploadingImages} aria-label="Close">×</button>}
             </div>
             <label>
                 Product name
@@ -160,8 +164,10 @@ const ProductFormModal = ({
             </div>
             {formError && <p className={styles.formMessage} role="alert">{formError}</p>}
             <div className={styles.modalActions}>
-                <button className={styles.cancelButton} type="button" onClick={closeProductModal} disabled={isUploadingImages}>Cancel</button>
-                <button className={styles.primaryButton} disabled={isUploadingImages} type="submit">{isUploadingImages ? "Uploading images..." : editingProductId ? "Save changes" : "Add product"}</button>
+                <button className={styles.cancelButton} type="button" onClick={closeProductModal} disabled={isUploadingImages}>{inline ? "Cancel changes" : "Cancel"}</button>
+                <button className={styles.primaryButton} disabled={isUploadingImages} type="submit">
+                    {isUploadingImages ? "Uploading images..." : inline ? "Complete" : editingProductId ? "Save changes" : "Add product"}
+                </button>
             </div>
         </form>
     </div>

@@ -209,6 +209,8 @@
 
 .addButton {
   flex: 1;
+  display: grid;
+  place-items: center;
   border: 1px solid #26372f;
   background: #26372f;
   color: #fffdf9;
@@ -218,8 +220,11 @@
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
+  text-decoration: none;
   transition: background 180ms ease, color 180ms ease;
 }
+
+.addButton:disabled { cursor: not-allowed; opacity: .6; }
 
 .addButton:hover {
   background: #a66d4e;
